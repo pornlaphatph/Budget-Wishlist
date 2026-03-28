@@ -1,28 +1,23 @@
 package com.project;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class BackgroundPanel extends JPanel {
-
     private Image bg;
-
     public BackgroundPanel() {
-        bg = new ImageIcon(
-                getClass().getResource(
-                        "/com/project/Image/BG.jpg"
-                )
-        ).getImage();
+        setLayout(new GridBagLayout());
+        try {
+            // ดึงรูปจากโฟลเดอร์ Image (ตรวจสอบ path ให้ถูกต้อง)
+            bg = new ImageIcon(getClass().getResource("/com/project/Image/BG.jpg")).getImage();
+        } catch (Exception e) {
+            System.out.println("Image not found, using default color.");
+        }
     }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        g.drawImage(bg, 0, 0,
-                getWidth(), getHeight(), this);
-
-       
-        
+        if (bg != null) {
+            g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 }
