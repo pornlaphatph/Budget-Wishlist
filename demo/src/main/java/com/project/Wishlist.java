@@ -38,9 +38,20 @@ public class Wishlist extends JPanel {
         // --- ส่วนปุ่มจัดการ (Bottom) ---
         JPanel bottomPanel = new JPanel();
         
+<<<<<<< HEAD
         JButton btnAdd = new JButton("เพิ่มรายการ");
         JButton btnDelete = new JButton("ลบรายการที่เลือก");
         JButton btnBuy = new JButton("ซื้อเลย (หักเงินจริง)");
+
+        // เซตฟอนต์ให้ปุ่มด้านล่างทั้งหมด
+        btnAdd.setFont(thaiFont);
+        btnDelete.setFont(thaiFont);
+        btnBuy.setFont(thaiFont);
+=======
+        JButton btnAdd = new JButton("เพิ่มรายการ ➕");
+        JButton btnDelete = new JButton("ลบรายการที่เลือก 🗑️");
+        JButton btnBuy = new JButton("ซื้อเลย (หักเงินจริง) ✅");
+>>>>>>> 12f9e02732cd83484a29a6c4fc0d2610934d3a87
 
         // เซตฟอนต์ให้ปุ่มด้านล่างทั้งหมด
         btnAdd.setFont(thaiFont);
