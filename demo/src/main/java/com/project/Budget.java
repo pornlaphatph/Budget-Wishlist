@@ -35,7 +35,7 @@ public class Budget extends JPanel {
 
         // ===== Card =====
         JPanel card = new JPanel(new GridLayout(3, 2, 10, 15));
-        card.setPreferredSize(new Dimension(400, 200));
+        card.setPreferredSize(new Dimension(400, 200)); 
         card.setBackground(new Color(255, 255, 255, 220)); 
         card.setBorder(BorderFactory.createTitledBorder("Purchase Details"));
 

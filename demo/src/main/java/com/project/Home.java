@@ -11,30 +11,31 @@ public class Home extends JPanel {
     public Home(App app) {
         setLayout(new BorderLayout());
         
-        // ===== Header =====
+        // ===== Header (ส่วนแสดงงบประมาณคงเหลือ) =====
         JPanel header = new JPanel(new GridLayout(2, 1));
         header.setBackground(Theme.PRIMARY);
         header.setPreferredSize(new Dimension(0, 150));
         header.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
         JLabel title = new JLabel("Remaining Budget");
-        title.setFont(new Font("Tahoma", Font.PLAIN, 14)); // แก้ฟอนต์
+        title.setFont(new Font("Tahoma", Font.PLAIN, 14)); 
         title.setForeground(new Color(200, 220, 240));
         
         lblBalance = new JLabel("฿ 0.00");
-        lblBalance.setFont(new Font("Tahoma", Font.BOLD, 36)); // แก้ฟอนต์
+        lblBalance.setFont(new Font("Tahoma", Font.BOLD, 36)); 
         lblBalance.setForeground(Color.WHITE);
         header.add(title);
         header.add(lblBalance);
         add(header, BorderLayout.NORTH);
 
-        // ===== Center Content =====
+        // ===== Center Content (ส่วนปุ่มควบคุม) =====
         JPanel center = new JPanel(new GridBagLayout());
         center.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(8, 10, 8, 10); // ปรับระยะห่างให้พอดี
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // ช่องกรอก Budget
         JLabel lblBudget = new JLabel("Budget :");
         lblBudget.setFont(new Font("Tahoma", Font.PLAIN, 14)); 
 
@@ -55,21 +56,37 @@ public class Home extends JPanel {
             }
         });
 
-        JButton btnGo = new JButton("คุ้มป่าวน้าา?");
+        // ปุ่มไปหน้า Decision Maker (คุ้มป่าวน้าา?)
+        JButton btnGo = new JButton("คุ้มป่าวน้าา? ");
         btnGo.setFont(new Font("Tahoma", Font.BOLD, 14)); 
         btnGo.setPreferredSize(new Dimension(0, 40));
         btnGo.addActionListener(e -> app.switchPage("BUDGET"));
 
-        gbc.gridx = 0; gbc.gridy = 0; center.add(lblBudget, gbc);
+        // ===== เพิ่มปุ่ม Wishlist ตรงนี้ =====
+        JButton btnWish = new JButton("รายการที่เล็งไว้ ");
+        btnWish.setFont(new Font("Tahoma", Font.BOLD, 14)); 
+        btnWish.setPreferredSize(new Dimension(0, 40));
+        btnWish.addActionListener(e -> app.switchPage("WISHLIST"));
+
+        // วางตำแหน่ง Component ด้วย GridBag
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 1;
+        center.add(lblBudget, gbc);
+        
         gbc.gridx = 1; center.add(budgetInput, gbc);
+        
         gbc.gridx = 2; center.add(btnSet, gbc);
         
+        // ปุ่ม "คุ้มป่าวน้าา?"
         gbc.gridy = 1; gbc.gridx = 0; gbc.gridwidth = 3;
         center.add(btnGo, gbc);
 
+        // ปุ่ม "รายการที่เล็งไว้"
+        gbc.gridy = 2; gbc.gridx = 0; gbc.gridwidth = 3;
+        center.add(btnWish, gbc);
+
         add(center, BorderLayout.CENTER);
 
-        // ===== South Content =====
+        // ===== South Content (ประวัติการซื้อ) =====
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 20, 25));
         southPanel.setPreferredSize(new Dimension(0, 200));
@@ -81,7 +98,6 @@ public class Home extends JPanel {
         
         JScrollPane scrollPane = new JScrollPane(txtHistory);
         
-        // แก้ฟอนต์ตรงหัวข้อประวัติ (TitledBorder)
         TitledBorder titledBorder = BorderFactory.createTitledBorder("ประวัติการซื้อ :");
         titledBorder.setTitleFont(new Font("Tahoma", Font.BOLD, 13)); 
         scrollPane.setBorder(titledBorder);
