@@ -30,7 +30,7 @@ public class Wishlist extends JPanel {
         // --- ส่วนปุ่มจัดการ (Bottom) ---
         JPanel bottomPanel = new JPanel();
         JButton btnAdd = new JButton("เพิ่มรายการ ➕");
-        JButton btnDelete = new JButton("ลบรายการที่เลือก 🗑️");
+        JButton btnDelete = new JButton("ลบรายการที่เลือก ➖");
         JButton btnBuy = new JButton("ซื้อเลย (หักเงินจริง) ✅");
 
         // Logic: เพิ่มรายการใหม่
