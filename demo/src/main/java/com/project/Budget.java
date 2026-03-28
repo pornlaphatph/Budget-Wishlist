@@ -16,6 +16,7 @@ public class Budget extends JPanel {
         header.setPreferredSize(new Dimension(0, 70));
 
         JButton btnBack = new JButton("← Back");
+        btnBack.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnBack.setFocusPainted(false);
         btnBack.addActionListener(e -> app.switchPage("HOME")); 
         
@@ -27,8 +28,8 @@ public class Budget extends JPanel {
         header.add(title);
         add(header, BorderLayout.NORTH);
 
-        // ===== Main Content Panel with Background =====
-        BackgroundPanel mainPanel = new BackgroundPanel(); 
+        // ===== Main Content Panel =====
+        JPanel mainPanel = new JPanel(new GridBagLayout()); // ใช้ JPanel ปกติถ้าไม่มี BackgroundPanel class
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
@@ -36,8 +37,8 @@ public class Budget extends JPanel {
         // ===== Card =====
         JPanel card = new JPanel(new GridLayout(3, 2, 10, 15));
         card.setPreferredSize(new Dimension(400, 200)); 
-        card.setBackground(new Color(255, 255, 255, 220)); 
-        card.setBorder(BorderFactory.createTitledBorder("Purchase Details"));
+        card.setBackground(Color.WHITE); 
+        card.setBorder(BorderFactory.createTitledBorder(null, "Purchase Details", 0, 0, new Font("Tahoma", Font.BOLD, 12)));
 
         card.add(new JLabel(" Item Name:"));
         JTextField nameField = new JTextField();
@@ -55,18 +56,18 @@ public class Budget extends JPanel {
         mainPanel.add(card, gbc);
 
         // ===== Button Analyze =====
-        JButton btnDecide = new JButton("Analyze Purchase 🔍");
+        JButton btnDecide = new JButton("Analyze Purchase");
         btnDecide.setPreferredSize(new Dimension(380, 50));
         btnDecide.setBackground(Theme.PRIMARY);
         btnDecide.setForeground(Color.WHITE);
-        btnDecide.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btnDecide.setFont(new Font("Tahoma", Font.BOLD, 16));
 
         gbc.gridy = 1;
         mainPanel.add(btnDecide, gbc);
 
         add(mainPanel, BorderLayout.CENTER);
 
-        // ===== Logic: วิเคราะห์ -> ถามยืนยัน -> หักงบ -> บันทึกประวัติ =====
+        // ===== Logic ใหม่: ปรับเกณฑ์ความคุ้มค่าตามเงินที่มีจริง =====
         btnDecide.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,55 +82,60 @@ public class Budget extends JPanel {
 
                     double price = Double.parseDouble(priceStr);
                     int usage = Integer.parseInt(usageStr);
+                    double currentBalance = DataStore.currentBalance;
 
                     if (usage <= 0) throw new Exception("จำนวนครั้งต้องมากกว่า 0");
 
                     double cpu = price / usage; // Cost Per Use
                     
                     JLabel labelVerdict = new JLabel();
-                    labelVerdict.setFont(new Font("SansSerif", Font.BOLD, 24));
+                    labelVerdict.setFont(new Font("Tahoma", Font.BOLD, 24));
                     labelVerdict.setHorizontalAlignment(SwingConstants.CENTER);
                     
                     String advice = "";
-                    if (cpu <= 100) {
-                        labelVerdict.setText("✅ WORTH IT!");
-                        labelVerdict.setForeground(Theme.INCOME);
-                        advice = "คุ้มค่ามาก! ตกครั้งละ " + String.format("%.2f", cpu) + " บาท";
-                    } else if (cpu <= 500) {
-                        labelVerdict.setText("⏳ HOLD ON!");
-                        labelVerdict.setForeground(Theme.PRIMARY);
-                        advice = "ราคาแอบแรงนะ ลองคิดดูอีกทีไหม?";
-                    } else {
-                        labelVerdict.setText("❌ TOO EXPENSIVE!");
+                    
+                    // --- เกณฑ์การตัดสินใหม่ ---
+                    if (price > currentBalance) {
+                        labelVerdict.setText("NO BUDGET!");
                         labelVerdict.setForeground(Theme.Price);
-                        advice = "แพงเกินไป ไม่ค่อยคุ้มเลยครับ";
+                        advice = "เงินไม่พอซื้อครับ! เกินงบไป " + String.format("%.2f", price - currentBalance) + " บาท";
+                    } 
+                    // ถ้าใช้แค่ครั้งเดียว แต่ราคาดันแพงกว่า 5% ของเงินที่มี (เช่น มี 100 ซื้อ 100 ใช้ครั้งเดียว = ไม่คุ้ม)
+                    else if (usage == 1 && price > (currentBalance * 0.05)) {
+                        labelVerdict.setText("NOT WORTH IT!");
+                        labelVerdict.setForeground(Theme.Price);
+                        advice = "ไม่คุ้มเลย! ใช้ครั้งเดียวแต่จ่ายหนักถึง " + String.format("%.0f%%", (price/currentBalance)*100) + " ของเงินที่มี";
+                    }
+                    // ถ้าหารออกมาแล้ว ราคาต่อครั้ง (CPU) แพงกว่า 10% ของเงินที่มี
+                    else if (cpu > (currentBalance * 0.1)) {
+                        labelVerdict.setText("THINK AGAIN!");
+                        labelVerdict.setForeground(Color.ORANGE);
+                        advice = "ราคาต่อการใช้ 1 ครั้งแอบสูงนะ (฿" + String.format("%.2f", cpu) + ") ลองคิดดูอีกทีไหม?";
+                    }
+                    else {
+                        labelVerdict.setText("WORTH IT!");
+                        labelVerdict.setForeground(Theme.INCOME);
+                        advice = "คุ้มค่ามาก! เฉลี่ยจ่ายเพียงครั้งละ " + String.format("%.2f", cpu) + " บาท";
                     }
 
-                    String message = "Item: " + name.toUpperCase() + "\n" + advice + "\n\nคุณตัดสินใจจะซื้อรายการนี้หรือไม่?";
-                    Object[] params = { message, labelVerdict };
+                    String message = "Item: " + name.toUpperCase() + "\n" + advice + "\n\nคุณยังตัดสินใจจะซื้อรายการนี้หรือไม่?";
                     
-                    int choice = JOptionPane.showConfirmDialog(app, params, "Analysis Result", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    // ตั้งฟอนต์ไทยให้ JOptionPane
+                    UIManager.put("OptionPane.messageFont", new Font("Tahoma", Font.PLAIN, 14));
+                    int choice = JOptionPane.showConfirmDialog(app, new Object[]{message, labelVerdict}, "Analysis Result", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-                    // --- ถ้าผู้ใช้กดปุ่ม YES (ตกลงซื้อ) ---
                     if (choice == JOptionPane.YES_OPTION) {
-                        //หักเงินในงบประมาณหลัก
                         DataStore.currentBalance -= price;
+                        DataStore.history.add("- " + name + " (฿" + String.format("%.2f", price) + ")");
+                        JOptionPane.showMessageDialog(app, "บันทึกสำเร็จ! เหลือเงิน: ฿" + String.format("%.2f", DataStore.currentBalance));
 
-                        //บันทึกลงในรายการประวัติ (History)
-                        String record = String.format("- %s (฿%.2f)", name, price);
-                        DataStore.history.add(record);
-
-                        //แจ้งเตือนความสำเร็จ
-                        JOptionPane.showMessageDialog(app, "บันทึกการซื้อสำเร็จ!\nยอดเงินคงเหลือ: ฿" + String.format("%.2f", DataStore.currentBalance));
-
-                        //ล้างค่าในช่องกรอกข้อมูล
                         nameField.setText("");
                         priceField.setText("");
                         usageField.setText("");
                     }
 
                 } catch (NumberFormatException nfe) {
-                    JOptionPane.showMessageDialog(app, "กรุณากรอกตัวเลขในช่องราคาและจำนวนครั้ง", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(app, "กรุณากรอกตัวเลขให้ถูกต้อง", "Input Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(app, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
