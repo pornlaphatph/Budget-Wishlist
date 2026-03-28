@@ -7,4 +7,7 @@ public class DataStore {
     
     // เพิ่ม List สำหรับเก็บประวัติการซื้อ
     public static ArrayList<String> history = new ArrayList<>(); 
+
+    public static ArrayList<String> wishNames = new ArrayList<>();
+    public static ArrayList<Double> wishPrices = new ArrayList<>();
 }
