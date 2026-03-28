@@ -111,7 +111,6 @@ public class Wishlist extends JPanel {
     public void updateList() {
         listModel.clear();
         if (DataStore.wishNames.isEmpty()) {
-            // สามารถเพิ่มข้อความบอกได้ถ้าว่าง
         } else {
             for (int i = 0; i < DataStore.wishNames.size(); i++) {
                 listModel.addElement((i + 1) + ". " + DataStore.wishNames.get(i) + " - ฿" + DataStore.wishPrices.get(i));
