@@ -7,7 +7,7 @@ public class BackgroundPanel extends JPanel {
     public BackgroundPanel() {
         setLayout(new GridBagLayout());
         try {
-            bg = new ImageIcon(getClass().getResource("/com/project/Image/BG.jpg")).getImage();
+            bg = new ImageIcon(getClass().getResource("/com/project/Image/1.png")).getImage();
         } catch (Exception e) {
             System.out.println("Image not found, using default color.");
         }

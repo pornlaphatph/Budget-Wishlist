@@ -14,13 +14,13 @@ public class Stats extends JPanel {
         setBackground(Color.WHITE);
 
         categoryColors = new HashMap<>();
-        categoryColors.put("ทั่วไป", new Color(180, 180, 180));
-        categoryColors.put("อาหาร", new Color(255, 102, 102));
-        categoryColors.put("ไอที/เกม", new Color(102, 178, 255));
-        categoryColors.put("เสื้อผ้า", new Color(255, 178, 102));
-        categoryColors.put("สุขภาพ/ของใช้", new Color(102, 255, 178));
-        categoryColors.put("เครื่องสำอาง", new Color(255, 153, 255));
-        categoryColors.put("อื่นๆ", new Color(204, 153, 255));   
+        categoryColors.put("ทั่วไป", new Color(118, 238, 198));
+        categoryColors.put("อาหาร", new Color(255, 99, 71));
+        categoryColors.put("ไอที/เกม", new Color(156, 156, 156));
+        categoryColors.put("เสื้อผ้า", new Color(224, 102, 255));
+        categoryColors.put("สุขภาพ/ของใช้", new Color(144, 238, 144));
+        categoryColors.put("เครื่องสำอาง", new Color(255, 193, 193));
+        categoryColors.put("อื่นๆ", new Color(238, 203, 173));   
 
         // Header
         JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
@@ -33,7 +33,7 @@ public class Stats extends JPanel {
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Tahoma", Font.BOLD, 20));
         header.add(title);
-        add(header, BorderLayout.NORTH);
+        add(header, BorderLayout.NORTH );
 
         // ส่วนวาดกราฟ
         JPanel chartPanel = new JPanel() {
