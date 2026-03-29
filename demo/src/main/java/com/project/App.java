@@ -7,7 +7,8 @@ public class App extends JFrame {
     private CardLayout cardLayout = new CardLayout();
     private JPanel container = new JPanel(cardLayout);
     private Home homePanel;
-    private Wishlist wishlistPanel; 
+    private Wishlist wishlistPanel;
+    private Stats statsPanel;
 
     public App() {
         setTitle("YET?");
@@ -19,13 +20,15 @@ public class App extends JFrame {
         homePanel = new Home(this);
         LoginGUI loginPanel = new LoginGUI(this);
         Budget budgetPanel = new Budget(this);
-        wishlistPanel = new Wishlist(this); 
+        wishlistPanel = new Wishlist(this);
+        statsPanel = new Stats(this);
 
         
         container.add(loginPanel, "LOGIN"); 
         container.add(homePanel, "HOME");
         container.add(budgetPanel, "BUDGET");
-        container.add(wishlistPanel, "WISHLIST"); 
+        container.add(wishlistPanel, "WISHLIST");
+        container.add(statsPanel, "STATS");
 
         add(container);
 
@@ -50,6 +53,7 @@ public class App extends JFrame {
 
     public static void main(String[] args) {
         UIManager.put("OptionPane.messageFont", new Font("Tahoma", Font.PLAIN, 14));
+        UIManager.put("OptionPane.buttonFont", new Font("Tahoma", Font.PLAIN, 14));
         SwingUtilities.invokeLater(() -> new App().setVisible(true));
     }
 }

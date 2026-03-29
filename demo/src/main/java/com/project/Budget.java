@@ -7,8 +7,10 @@ import java.awt.event.ActionListener;
 
 public class Budget extends JPanel {
     private JTextField nameField, priceField, usageField;
+    private JComboBox<String> categoryBox; 
     private JButton btnDecide, btnBack;
     private Font thaiFont = new Font("Tahoma", Font.PLAIN, 14);
+    private String[] categories = {"ทั่วไป", "อาหาร", "ไอที/เกม", "เสื้อผ้า", "สุขภาพ/ของใช้", "เครื่องสำอาง", "อื่นๆ"};
 
     public Budget(App app) {
         setLayout(new BorderLayout());
@@ -41,67 +43,57 @@ public class Budget extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // ===== Card (Input Fields) =====
-        JPanel card = new JPanel(new GridLayout(3, 2, 10, 15));
-        card.setPreferredSize(new Dimension(400, 200)); 
+        JPanel card = new JPanel(new GridLayout(4, 2, 10, 15));
+        card.setPreferredSize(new Dimension(400, 250)); 
         card.setBackground(Color.WHITE); 
         card.setBorder(BorderFactory.createTitledBorder(null, "Purchase Details", 0, 0, new Font("Tahoma", Font.BOLD, 12)));
 
         card.add(new JLabel(" Item Name:"));
         nameField = new JTextField();
-        nameField.setFont(new Font("Tahoma", Font.PLAIN, 14));
         card.add(nameField);
+
+        card.add(new JLabel(" Category:"));
+        categoryBox = new JComboBox<>(categories);
+        categoryBox.setFont(thaiFont);
+        card.add(categoryBox);
 
         card.add(new JLabel(" Price (฿):"));
         priceField = new JTextField();
-        priceField.setFont(new Font("Tahoma", Font.PLAIN, 14));
         card.add(priceField);
 
         card.add(new JLabel(" Usage (times/year):"));
         usageField = new JTextField();
-        usageField.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        usageField.addActionListener(e -> processAnalysis(app));
         card.add(usageField);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridx = 0; gbc.gridy = 0;
         mainPanel.add(card, gbc);
 
-        // ===== Button Analyze =====
         btnDecide = new JButton("คำนวณเลย!");
         btnDecide.setPreferredSize(new Dimension(380, 50));
         btnDecide.setBackground(Theme.PRIMARY);
         btnDecide.setForeground(Color.WHITE);
         btnDecide.setFont(new Font("Tahoma", Font.BOLD, 16));
+        btnDecide.addActionListener(e -> processAnalysis(app));
 
         gbc.gridy = 1;
         mainPanel.add(btnDecide, gbc);
 
         add(mainPanel, BorderLayout.CENTER);
-
-        // ===== Logic การวิเคราะห์ =====
-        btnDecide.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                processAnalysis(app);
-            }
-        });
     }
 
     private void processAnalysis(App app) {
-
         if(DataStore.currentBalance <= 0) {
-            JOptionPane.showMessageDialog(this, 
-                "คุณยังไม่ได้ตั้ง Budget เลย! กลับไปตั้งงบก่อนนะจ๊ะ", "WARNING!", JOptionPane.WARNING_MESSAGE);
-            
+            JOptionPane.showMessageDialog(this, "คุณยังไม่ได้ตั้ง Budget เลย!", "WARNING!", JOptionPane.WARNING_MESSAGE);
             app.switchPage("HOME");
             return;
         }
-        
 
         try {
             String name = nameField.getText().trim();
             String priceStr = priceField.getText().trim();
             String usageStr = usageField.getText().trim();
+            String category = (String) categoryBox.getSelectedItem();
 
             if (name.isEmpty() || priceStr.isEmpty() || usageStr.isEmpty()) {
                 throw new Exception("กรุณากรอกข้อมูลให้ครบถ้วนก่อนนะจ๊ะ");
@@ -111,94 +103,110 @@ public class Budget extends JPanel {
             int usage = Integer.parseInt(usageStr);
             double currentBalance = DataStore.currentBalance;
 
-            if (usage <= 0) throw new Exception("จำนวนครั้งต้องมากกว่า 0 นะ");
+            if (price <= 0 || usage <= 0) throw new Exception("ราคาและจำนวนครั้งต้องมากกว่า 0");
 
             double cpu = price / usage; 
-            
             JLabel labelVerdict = new JLabel();
             labelVerdict.setFont(new Font("Tahoma", Font.BOLD, 26));
             labelVerdict.setHorizontalAlignment(SwingConstants.CENTER);
             
             String advice = "";
             
-            // --- Logic ดึงสติ---
+            // 1. Logic วิเคราะห์พื้นฐาน
             if (price > currentBalance) {
                 labelVerdict.setText("NO BUDGET!");
                 labelVerdict.setForeground(Theme.Price);
-                advice = "เงินไม่พอซื้อครับ! เกินงบไป " + String.format("%.2f", price - currentBalance) + " บาท";
-            } 
-            else if (usage == 1 && price > (currentBalance * 0.05)) {
+                advice = "เงินไม่พอครับ! ขาดอีก " + String.format("%.2f", price - currentBalance) + " บาท";
+            } else if (usage == 1 && price > (currentBalance * 0.05)) {
                 labelVerdict.setText("NOT WORTH IT!");
                 labelVerdict.setForeground(Theme.Price);
-                advice = "ไม่คุ้มเลย! ใช้ครั้งเดียวแต่จ่ายหนักถึง " + String.format("%.1f%%", (price/currentBalance)*100) + " ของงบที่คุณมีนะ";
-            }
-            else if (cpu > (currentBalance * 0.1) || price > (currentBalance * 0.4) || (price > 1000 && usage < 12)) {
+                advice = "ใช้ครั้งเดียวแต่จ่ายถึง " + String.format("%.1f%%", (price/currentBalance)*100) + " ของงบที่มี ไม่คุ้มเลย";
+            } else if (cpu > (currentBalance * 0.1) || price > (currentBalance * 0.4)) {
                 labelVerdict.setText("THINK AGAIN!");
                 labelVerdict.setForeground(Color.ORANGE);
-                
-                if (price > (currentBalance * 0.4)) {
-                    advice = "ระวัง! ของชิ้นนี้ราคาสูงถึง " + String.format("%.0f%%", (price/currentBalance)*100) + " ของงบที่คุณมีนะ";
-                } else if (price > 1000 && usage < 12) {
-                    advice = "ของราคาหลักพันแต่ใช้เฉลี่ยเดือนละไม่ถึงครั้ง... ลองคิดดูอีกทีไหม?";
-                } else {
-                    advice = "ราคาต่อการใช้ 1 ครั้งแอบสูงนะ (฿" + String.format("%.2f", cpu) + ")";
-                }
-            }
-            else {
+                advice = "ราคาต่อครั้งคือ ฿" + String.format("%.2f", cpu) + " คิดดูอีกทีนะ";
+            } else {
                 labelVerdict.setText("WORTH IT!");
                 labelVerdict.setForeground(Theme.INCOME);
-                advice = "ของมันต้องมีแล้วมั้ย! เฉลี่ยจ่ายเพียงครั้งละ " + String.format("%.2f", cpu) + " บาทเองนะ ถือว่าคุ้มมาก!";
+                advice = "คุ้มมาก! จ่ายเฉลี่ยครั้งละ ฿" + String.format("%.2f", cpu) + " เท่านั้น";
             }
 
-            String message = "Item: " + name.toUpperCase() + "\n" + advice + "\n\nคุณจะตัดสินใจอย่างไร?";
-            
-            
-            Object[] options = {"ซื้อเลย", "ใส่ Wishlist ไว้ก่อน", "ยกเลิก"};
-            UIManager.put("OptionPane.messageFont", new Font("Tahoma", Font.PLAIN, 14));
-            
-            int choice = JOptionPane.showOptionDialog(app, 
-                    new Object[]{message, labelVerdict}, 
-                    "Analysis Result",
-                    JOptionPane.YES_NO_CANCEL_OPTION, 
-                    JOptionPane.PLAIN_MESSAGE, 
-                    null, options, options[2]);
+            //[Smart Logic] วิเคราะห์ตามหมวดหมู่
+            int categoryCount = 0;
+            for (String cat : DataStore.historyCategories) {
+                if (cat.equals(category)) categoryCount++;
+            }
 
+            String smartAdvice = "";
+            if (category.equals("สุขภาพ/ของใช้")) {
+                smartAdvice = "\n\n[Health] เป็นการลงทุนที่คุ้มค่าเพื่อตัวเองครับ";
+            } 
+            else if (category.equals("ไอที/เกม") && categoryCount >= 3) {
+                smartAdvice = "\n\n[Warning] เดือนนี้เปย์ไอทีไป " + categoryCount + " ชิ้นแล้วนะ พักก่อน!";
+                labelVerdict.setText("HOLD ON!");
+                labelVerdict.setForeground(Color.RED);
+            }
+            else if (category.equals("เครื่องสำอาง") && price > 1000) {
+                smartAdvice = "\n\n[Beauty] สวยแบบพอดีๆ ในงบที่เหมาะสมจะดีกว่านะจ๊ะ";
+            }
+            else if (category.equals("อาหาร") && price > 500) {
+                smartAdvice = "\n\n[Foodie] มื้อนี้หรูจัง อย่าลืมประหยัดมื้อถัดไปล่ะ";
+            }
+
+            advice += smartAdvice;
+
+            // 3. แสดงผลหน้าต่างตัดสินใจ
+            String message = "Item: " + name.toUpperCase() + " [" + category + "]\n" + advice + "\n\nตัดสินใจอย่างไร?";
+            Object[] options = {"ซื้อเลย", "ใส่ Wishlist", "ยกเลิก"};
             
+            int choice = JOptionPane.showOptionDialog(app, new Object[]{message, labelVerdict}, 
+                    "Analysis Result", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[2]);
+
             if (choice == JOptionPane.YES_OPTION) {
-                if (DataStore.currentBalance >= price) {
+                if (currentBalance >= price) {
                     DataStore.currentBalance -= price;
-                    DataStore.history.add("- " + name + " (฿" + String.format("%.2f", price) + ")");
-                    JOptionPane.showMessageDialog(app, "ลงประวัติเรียบร้อย คุณเหลือเงิน: ฿" + String.format("%.2f", DataStore.currentBalance));
+                    DataStore.history.add("- [" + category + "] " + name + " (฿" + String.format("%.2f", price) + ")");
+                    DataStore.historyCategories.add(category);
+                    JOptionPane.showMessageDialog(app, "บันทึกเรียบร้อย เหลือเงิน: ฿" + String.format("%.2f", DataStore.currentBalance));
+                    DataStore.categoryTotals.put(category, DataStore.categoryTotals.getOrDefault(category, 0.0) + price);
+                    clearFields();
                 } else {
-                    JOptionPane.showMessageDialog(app, "เงินไม่พอจ้า! ลองเพิ่มเข้า Wishlist แทนนะ", "Warning", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(app, "เงินไม่พอจ้า!", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             } 
-            else if (choice == JOptionPane.NO_OPTION) {  // ส่วนของ wishlist
+            else if (choice == JOptionPane.NO_OPTION) {
                 DataStore.wishNames.add(name);
                 DataStore.wishPrices.add(price);
+                DataStore.wishCategories.add(category);
+
+                String savingAdvice = "";
+                if (currentBalance < price) {
+                    double gap = price - currentBalance;
+                    savingAdvice = "\n\nต้องเก็บเงินเพิ่มอีก ฿" + String.format("%.2f", gap) + " นะ";
+                } else {
+                    savingAdvice = "\n\nงบพอซื้อ แต่เก็บไว้พิจารณาก็ดีครับ";
+                }
+
                 Integer[] stars = {1, 2, 3, 4, 5};
-                Integer priority = (Integer) JOptionPane.showInputDialog(app, "ความจำเป็นระดับไหนสำหรับ Wishlist นี้?", "Set Priority",JOptionPane.QUESTION_MESSAGE, null, stars, 3);
-    
-                if (priority == null) priority = 3;
-    
-                DataStore.wishPriorities.add(priority);
-    
-                JOptionPane.showMessageDialog(app, "เพิ่ม '" + name + "' เข้าใน Wishlist เรียบร้อยแล้วจ้า");
+                Integer priority = (Integer) JOptionPane.showInputDialog(app, "ความจำเป็นระดับไหน?" + savingAdvice, "Set Priority", JOptionPane.QUESTION_MESSAGE, null, stars, 3);
+                DataStore.wishPriorities.add(priority == null ? 3 : priority);
+
+                JOptionPane.showMessageDialog(app, "เพิ่มเข้า Wishlist แล้ว");
+                clearFields();
             }
-            clearFields();
 
         } catch (NumberFormatException nfe) {
-            JOptionPane.showMessageDialog(this, "กรุณากรอกราคาและจำนวนครั้งเป็นตัวเลข", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "กรุณากรอกตัวเลขให้ถูกต้อง", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    
     private void clearFields() {
         nameField.setText("");
         priceField.setText("");
         usageField.setText("");
+        categoryBox.setSelectedIndex(0);
         nameField.requestFocus();
     }
 }
