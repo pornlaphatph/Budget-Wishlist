@@ -14,7 +14,7 @@ public class Home extends JPanel {
         // ===== Header (ส่วนแสดงงบประมาณคงเหลือ) =====
         JPanel header = new JPanel(new GridLayout(2, 1));
         header.setBackground(Theme.PRIMARY);
-        header.setPreferredSize(new Dimension(0, 150));
+        header.setPreferredSize(new Dimension(0, 130));
         header.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
         JLabel title = new JLabel("Remaining Budget");

@@ -12,4 +12,5 @@ public class DataStore {
     // Wishlist
     public static ArrayList<String> wishNames = new ArrayList<>();
     public static ArrayList<Double> wishPrices = new ArrayList<>();
+    public static ArrayList<Integer> wishPriorities = new ArrayList<>();
 }

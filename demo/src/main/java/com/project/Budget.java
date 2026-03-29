@@ -174,9 +174,15 @@ public class Budget extends JPanel {
                 }
             } 
             else if (choice == JOptionPane.NO_OPTION) {  // ส่วนของ wishlist
-
                 DataStore.wishNames.add(name);
                 DataStore.wishPrices.add(price);
+                Integer[] stars = {1, 2, 3, 4, 5};
+                Integer priority = (Integer) JOptionPane.showInputDialog(app, "ความจำเป็นระดับไหนสำหรับ Wishlist นี้?", "Set Priority",JOptionPane.QUESTION_MESSAGE, null, stars, 3);
+    
+                if (priority == null) priority = 3;
+    
+                DataStore.wishPriorities.add(priority);
+    
                 JOptionPane.showMessageDialog(app, "เพิ่ม '" + name + "' เข้าใน Wishlist เรียบร้อยแล้วจ้า");
             }
             clearFields();
