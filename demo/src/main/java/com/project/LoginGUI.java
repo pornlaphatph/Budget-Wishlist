@@ -5,17 +5,21 @@ import java.awt.*;
 
 public class LoginGUI extends JPanel {
 
+    private Font thaiFont = new Font("Tahoma", Font.PLAIN, 14);
+
     public LoginGUI(App app) {
         setLayout(new BorderLayout());
 
-        // ใช้ BackgroundPanel ที่คุณมีอยู่แล้ว
+        UIManager.put("TextField.font", thaiFont);
+        UIManager.put("PasswordField.font", thaiFont);
+
         BackgroundPanel bgPanel = new BackgroundPanel();
         bgPanel.setLayout(new GridBagLayout());
 
         // ส่วนของกล่อง Login
         JPanel loginPanel = new JPanel();
-        loginPanel.setPreferredSize(new Dimension(350, 250)); // ขยายขนาดเล็กน้อยให้พอดี
-        // ปรับให้พื้นหลังโปร่งแสงเพื่อให้เห็นรูป BG
+        loginPanel.setPreferredSize(new Dimension(350, 250));
+   
         loginPanel.setBackground(new Color(255, 255, 255, 200)); 
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
         loginPanel.setBorder(BorderFactory.createTitledBorder("System Login"));
@@ -50,7 +54,6 @@ public class LoginGUI extends JPanel {
             }
         });
 
-        // จัดวาง Component ลงใน loginPanel
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(usernameField);
         loginPanel.add(Box.createVerticalStrut(15));
@@ -58,10 +61,9 @@ public class LoginGUI extends JPanel {
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(loginButton);
 
-        // ใส่ loginPanel ลงกลาง bgPanel
         bgPanel.add(loginPanel, new GridBagConstraints());
 
-        // เพิ่ม bgPanel เข้าไปในตัว LoginGUI (JPanel หลัก)
+
         add(bgPanel, BorderLayout.CENTER);
     }
 }

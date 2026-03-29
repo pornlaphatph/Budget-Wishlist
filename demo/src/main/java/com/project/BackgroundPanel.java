@@ -7,7 +7,6 @@ public class BackgroundPanel extends JPanel {
     public BackgroundPanel() {
         setLayout(new GridBagLayout());
         try {
-            // ดึงรูปจากโฟลเดอร์ Image (ตรวจสอบ path ให้ถูกต้อง)
             bg = new ImageIcon(getClass().getResource("/com/project/Image/BG.jpg")).getImage();
         } catch (Exception e) {
             System.out.println("Image not found, using default color.");
