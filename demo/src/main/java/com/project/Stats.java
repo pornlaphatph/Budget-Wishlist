@@ -27,6 +27,7 @@ public class Stats extends JPanel {
         header.setBackground(Theme.PRIMARY);
         btnBack = new JButton("← Back");
         btnBack.addActionListener(e -> app.switchPage("HOME"));
+        btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
         header.add(btnBack);
         
         JLabel title = new JLabel("สัดส่วนค่าใช้จ่ายรายหมวด");

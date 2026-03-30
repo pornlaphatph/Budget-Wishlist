@@ -27,7 +27,8 @@ public class Budget extends JPanel {
         btnBack = new JButton("← Back");
         btnBack.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnBack.setFocusPainted(false);
-        btnBack.addActionListener(e -> app.switchPage("HOME")); 
+        btnBack.addActionListener(e -> app.switchPage("HOME"));
+        btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         JLabel title = new JLabel("ซื้อดีมั้ยน้า?");
         title.setForeground(Color.WHITE);
@@ -55,6 +56,7 @@ public class Budget extends JPanel {
         card.add(new JLabel(" Category:"));
         categoryBox = new JComboBox<>(categories);
         categoryBox.setFont(thaiFont);
+        categoryBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.add(categoryBox);
 
         card.add(new JLabel(" Price (฿):"));
@@ -75,6 +77,7 @@ public class Budget extends JPanel {
         btnDecide.setForeground(Color.WHITE);
         btnDecide.setFont(new Font("Tahoma", Font.BOLD, 16));
         btnDecide.addActionListener(e -> processAnalysis(app));
+        btnDecide.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         gbc.gridy = 1;
         mainPanel.add(btnDecide, gbc);

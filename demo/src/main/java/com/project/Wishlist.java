@@ -18,6 +18,7 @@ public class Wishlist extends JPanel {
         JButton btnBack = new JButton("← Back");
         btnBack.setFont(thaiFont);
         btnBack.addActionListener(e -> app.switchPage("HOME"));
+        btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         JLabel title = new JLabel("Wishlist");
         title.setForeground(Color.WHITE);
@@ -29,7 +30,20 @@ public class Wishlist extends JPanel {
 
         // --- Center ---
         wishlistDisplay.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        setupRenderer(); 
+        setupRenderer();
+
+        wishlistDisplay.addMouseMotionListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseMoved(java.awt.event.MouseEvent e) {
+            // ตรวจสอบว่าตำแหน่งเมาส์ชี้ไปที่ Item ไหนใน List หรือเปล่า
+            int index = wishlistDisplay.locationToIndex(e.getPoint());
+            if (index != -1 && wishlistDisplay.getCellBounds(index, index).contains(e.getPoint())) {
+                wishlistDisplay.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            } else {
+                wishlistDisplay.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+        }
+        });
         
         JScrollPane scrollPane = new JScrollPane(wishlistDisplay);
         add(scrollPane, BorderLayout.CENTER);
@@ -40,6 +54,11 @@ public class Wishlist extends JPanel {
         JButton btnAnalyze = new JButton("วิเคราะห์และซื้อ");
         JButton btnSort = new JButton("เรียงความจำเป็น");
         JButton btnDelete = new JButton("ลบรายการ");
+
+        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAnalyze.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSort.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         btnAdd.setFont(thaiFont);
         btnAnalyze.setFont(thaiFont);
