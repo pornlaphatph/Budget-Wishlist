@@ -68,7 +68,7 @@ public class LoginGUI extends JPanel {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        if (username.equals("admin") && password.equals("1234")) {
+        if (username.equals("a") && password.equals("1")) {
             JOptionPane.showMessageDialog(app, "Login สำเร็จแล้วค้าบ");
             app.switchPage("HOME"); 
             
