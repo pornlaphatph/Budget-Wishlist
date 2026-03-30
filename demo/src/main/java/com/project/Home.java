@@ -50,6 +50,8 @@ public class Home extends JPanel {
         JButton btnSet = new JButton("Set Budget");
         btnSet.setFont(new Font("Tahoma", Font.BOLD, 12));
         btnSet.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSet.setBackground(Color.BLACK);
+        btnSet.setForeground(Color.WHITE);
 
         // --- Logic สำหรับ Set Budget ---
         ActionListener setBudgetAction = e -> performSetBudget();
@@ -61,18 +63,24 @@ public class Home extends JPanel {
         btnGo.setPreferredSize(new Dimension(0, 40));
         btnGo.addActionListener(e -> app.switchPage("BUDGET"));
         btnGo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnGo.setBackground(Theme.ButtonGo1);
+        btnGo.setForeground(Color.WHITE);
 
         JButton btnWish = new JButton("รายการที่เล็งไว้ ");
         btnWish.setFont(new Font("Tahoma", Font.BOLD, 14)); 
         btnWish.setPreferredSize(new Dimension(0, 40));
         btnWish.addActionListener(e -> app.switchPage("WISHLIST"));
         btnWish.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnWish.setBackground(Theme.ButtonWish);
+        btnWish.setForeground(Color.WHITE);
 
         JButton btnStats = new JButton("ดูสถิติการใช้จ่าย");
         btnStats.setFont(new Font("Tahoma", Font.BOLD, 14));
         btnStats.setPreferredSize(new Dimension(0, 40));
         btnStats.addActionListener(e -> app.switchPage("STATS"));
         btnStats.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnStats.setBackground(Theme.ButtonStats);
+        btnStats.setForeground(Color.WHITE);
 
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 1;
@@ -101,12 +109,21 @@ public class Home extends JPanel {
         txtHistory = new JTextArea();
         txtHistory.setEditable(false);
         txtHistory.setFont(new Font("Tahoma", Font.PLAIN, 13)); 
-        txtHistory.setBackground(new Color(245, 245, 245));
+        txtHistory.setBackground(Color.WHITE);
+        
         
         JScrollPane scrollPane = new JScrollPane(txtHistory);
-        TitledBorder titledBorder = BorderFactory.createTitledBorder("ประวัติการซื้อ :");
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true), // true = ขอบมน
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Theme.PRIMARY, 1, true), " ประวัติการซื้อ "
+        );
         titledBorder.setTitleFont(new Font("Tahoma", Font.BOLD, 13)); 
+        titledBorder.setTitleColor(Theme.PRIMARY);
         scrollPane.setBorder(titledBorder);
+        
         
         southPanel.add(scrollPane, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);

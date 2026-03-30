@@ -28,6 +28,8 @@ public class Budget extends JPanel {
         btnBack.setFont(new Font("Tahoma", Font.PLAIN, 12));
         btnBack.setFocusPainted(false);
         btnBack.addActionListener(e -> app.switchPage("HOME"));
+        btnBack.setBackground(Theme.ButtonBack);
+        btnBack.setForeground(Theme.ButtonBack2);
         btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         JLabel title = new JLabel("ซื้อดีมั้ยน้า?");
@@ -54,9 +56,31 @@ public class Budget extends JPanel {
         card.add(nameField);
 
         card.add(new JLabel(" Category:"));
+
+        // category
         categoryBox = new JComboBox<>(categories);
         categoryBox.setFont(thaiFont);
         categoryBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        categoryBox.setBackground(Color.WHITE);
+        categoryBox.setForeground(new Color(50, 50, 50));
+        categoryBox.setFocusable(false);
+        categoryBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        
+                label.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); 
+        
+                if (isSelected) {
+                    label.setBackground(new Color(230, 240, 255));
+                    label.setForeground(new Color(72, 118, 255));
+                } else {
+                    label.setBackground(Color.WHITE);
+                    label.setForeground(new Color(70, 70, 70));
+                }
+                return label;
+            }
+        });
         card.add(categoryBox);
 
         card.add(new JLabel(" Price (฿):"));

@@ -27,10 +27,12 @@ public class Stats extends JPanel {
         header.setBackground(Theme.PRIMARY);
         btnBack = new JButton("← Back");
         btnBack.addActionListener(e -> app.switchPage("HOME"));
+        btnBack.setBackground(Theme.ButtonBack);
+        btnBack.setForeground(Theme.ButtonBack2);
         btnBack.setCursor(new Cursor(Cursor.HAND_CURSOR));
         header.add(btnBack);
         
-        JLabel title = new JLabel("สัดส่วนค่าใช้จ่ายรายหมวด");
+        JLabel title = new JLabel("สรุปค่าใช้จ่าย");
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Tahoma", Font.BOLD, 20));
         header.add(title);
@@ -97,5 +99,11 @@ public class Stats extends JPanel {
         g2.setColor(Color.DARK_GRAY);
         g2.setFont(new Font("Tahoma", Font.BOLD, 16));
         g2.drawString("Total: ฿" + String.format("%.2f", totalSpending), 100, 400);
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        repaint();
     }
 }
