@@ -5,4 +5,5 @@ public class Theme {
     public static final Color PRIMARY = new Color(0, 0, 0);
     public static final Color INCOME = new Color(39, 174, 96);
     public static final Color Price = new Color(192, 57, 43);
+    public static final Color ButtonLogin = new Color(158, 24, 43);
 }
