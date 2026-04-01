@@ -49,7 +49,8 @@ public class Budget extends JPanel {
         JPanel card = new JPanel(new GridLayout(4, 2, 10, 15));
         card.setPreferredSize(new Dimension(400, 250)); 
         card.setBackground(Color.WHITE); 
-        card.setBorder(BorderFactory.createTitledBorder(null, "Purchase Details", 0, 0, new Font("Tahoma", Font.BOLD, 12)));
+        card.setBorder(BorderFactory.createTitledBorder(null, "Purchase Details", 
+        0, 0, new Font("Tahoma", Font.BOLD, 12)));
 
         card.add(new JLabel(" Item Name:"));
         nameField = new JTextField();
@@ -111,7 +112,8 @@ public class Budget extends JPanel {
 
     private void processAnalysis(App app) {
         if(DataStore.currentBalance <= 0) {
-            JOptionPane.showMessageDialog(this, "คุณยังไม่ได้ตั้ง Budget เลย!", "WARNING!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "คุณยังไม่ได้ตั้ง Budget เลย!", 
+            "WARNING!", JOptionPane.WARNING_MESSAGE);
             app.switchPage("HOME");
             return;
         }
@@ -185,7 +187,6 @@ public class Budget extends JPanel {
             // 3. แสดงผลหน้าต่างตัดสินใจ
             String message = "Item: " + name.toUpperCase() + " [" + category + "]\n" + advice + "\n\nตัดสินใจอย่างไร?";
             Object[] options = {"ซื้อเลย", "ใส่ Wishlist", "ยกเลิก"};
-            
             int choice = JOptionPane.showOptionDialog(app, new Object[]{message, labelVerdict}, 
                     "Analysis Result", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[2]);
 
@@ -213,15 +214,14 @@ public class Budget extends JPanel {
                 } else {
                     savingAdvice = "\n\nงบพอซื้อ แต่เก็บไว้พิจารณาก็ดีครับ";
                 }
-
                 Integer[] stars = {1, 2, 3, 4, 5};
-                Integer priority = (Integer) JOptionPane.showInputDialog(app, "ความจำเป็นระดับไหน?" + savingAdvice, "Set Priority", JOptionPane.QUESTION_MESSAGE, null, stars, 3);
+                Integer priority = (Integer) JOptionPane.showInputDialog(app, "ความจำเป็นระดับไหน?" + savingAdvice, "Set Priority", 
+                JOptionPane.QUESTION_MESSAGE, null, stars, 3);
                 DataStore.wishPriorities.add(priority == null ? 3 : priority);
 
                 JOptionPane.showMessageDialog(app, "เพิ่มเข้า Wishlist แล้ว");
                 clearFields();
             }
-
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "กรุณากรอกตัวเลขให้ถูกต้อง", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
