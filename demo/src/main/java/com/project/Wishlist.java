@@ -250,7 +250,7 @@ public class Wishlist extends JPanel {
 
     @Override
     public void addNotify() {
-        super.addNotify();
+        super.addNotify(); 
         updateList(); 
     }
 
