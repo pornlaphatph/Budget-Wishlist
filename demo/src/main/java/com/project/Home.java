@@ -114,7 +114,7 @@ public class Home extends JPanel {
         
         JScrollPane scrollPane = new JScrollPane(txtHistory);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true), // true = ขอบมน
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
             BorderFactory.createEmptyBorder(8, 8, 8, 8)
         ));
         TitledBorder titledBorder = BorderFactory.createTitledBorder(

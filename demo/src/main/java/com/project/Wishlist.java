@@ -201,6 +201,7 @@ public class Wishlist extends JPanel {
             updateList();
         });
 
+        // Delete button
         btnDelete.addActionListener(e -> {
             int index = wishlistDisplay.getSelectedIndex();
             if (index != -1) {

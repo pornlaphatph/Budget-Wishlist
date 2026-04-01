@@ -68,7 +68,7 @@ public class Stats extends JPanel {
         int x = 100, y = 50, width = 300, height = 300;
         int startAngle = 0;
 
-        int labelY = 70; // ตำแหน่งเริ่มเขียนคำอธิบายสี (Legend)
+        int labelY = 70;
         
         for (Map.Entry<String, Double> entry : DataStore.categoryTotals.entrySet()) {
             String cat = entry.getKey();
